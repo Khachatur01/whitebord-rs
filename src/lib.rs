@@ -30,7 +30,7 @@ extern "C" {
 pub struct Whiteboard {
     id: ElementId,
     view_port: ViewPort,
-    active_tool: Box<dyn Tool>,
+    active_tool: Option<Box<dyn Tool>>,
 }
 
 #[wasm_bindgen]
@@ -41,7 +41,7 @@ impl Whiteboard {
         Self {
             id: ElementId::with_owner_id(owner_id),
             view_port: ViewPort::new(ElementId::with_owner_id(owner_id)),
-            active_tool: Box::new(SelectTool::new()),
+            active_tool: None,
         }
     }
 
@@ -70,36 +70,56 @@ impl Whiteboard {
     }
 
     pub fn activate_select_tool(&mut self) {
-        self.activate_tool(SelectTool::new());
+        // self.activate_tool(SelectTool::new(self.view_port.clone()));
     }
 
     pub fn mouse_down(&mut self, x: f64, y: f64) {
-        self.active_tool.mouse_down(&Point::new(x, y));
+        let Some(active_tool) = &mut self.active_tool else {
+            return;
+        };
+
+        active_tool.mouse_down(&Point::new(x, y));
     }
 
     pub fn mouse_move(&mut self, x: f64, y: f64) {
-        self.active_tool.mouse_move(&Point::new(x, y));
+        let Some(active_tool) = &mut self.active_tool else {
+            return;
+        };
+
+        active_tool.mouse_move(&Point::new(x, y));
     }
 
     pub fn mouse_up(&mut self, x: f64, y: f64) {
-        self.active_tool.mouse_up(&Point::new(x, y));
+        let Some(active_tool) = &mut self.active_tool else {
+            return;
+        };
+
+        active_tool.mouse_up(&Point::new(x, y));
     }
 
     pub fn render_canvas(&self, renderer: &mut CanvasRenderer) {
         renderer.clear();
 
         self.view_port.render(renderer);
-        self.active_tool.render(renderer);
+
+        let Some(active_tool) = &self.active_tool else {
+            return;
+        };
+        active_tool.render(renderer);
     }
 
     pub fn render_svg(&self, renderer: &mut SVGRenderer) {
         renderer.clear();
 
         self.view_port.render(renderer);
-        self.active_tool.render(renderer);
+
+        let Some(active_tool) = &self.active_tool else {
+            return;
+        };
+        active_tool.render(renderer);
     }
 
     fn activate_tool(&mut self, tool: impl Tool + 'static) {
-        self.active_tool = Box::new(tool);
+        self.active_tool = Some(Box::new(tool));
     }
 }
