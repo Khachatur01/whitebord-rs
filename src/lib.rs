@@ -13,7 +13,6 @@ use graphics_rs::standard_entity_plugin::entity::geometric::rectangle_entity::Re
 use graphics_rs::standard_rendering_plugin::style::shape_style::ShapeStyle;
 use graphics_rs::standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
 use graphics_rs::standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
-use graphics_rs::standard_tool_plugin::tool::select_tool::SelectTool;
 use graphics_rs::standard_tool_plugin::tool::Tool;
 use graphics_rs::view_port::ViewPort;
 use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
