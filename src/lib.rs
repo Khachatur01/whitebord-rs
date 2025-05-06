@@ -49,7 +49,7 @@ impl Whiteboard {
             self.view_port.clone(),
             move || {
                 let id: ElementId = ElementId::with_owner_id("weuif");
-                RectangleEntity::new(id, Rectangle::zero_sized(Point::default()), ShapeStyle::default())
+                RectangleEntity::with_standard_feature_set(id, Rectangle::zero_sized(Point::default()), ShapeStyle::default())
             }
         );
 
@@ -61,7 +61,7 @@ impl Whiteboard {
             self.view_port.clone(),
             move || {
                 let id: ElementId = ElementId::with_owner_id("weuif");
-                PolygonEntity::new(id, Polygon::new(&[]), ShapeStyle::default())
+                PolygonEntity::with_standard_feature_set(id, Polygon::new(&[]), ShapeStyle::default())
             }
         );
 

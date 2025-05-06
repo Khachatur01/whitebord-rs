@@ -3,7 +3,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 use graphics_rs::core::entity::Id;
 
 #[wasm_bindgen]
-#[derive(Clone)]
+#[derive(Clone, Eq, PartialEq)]
 pub struct ElementId {
     owner_id: String,
     index: usize,
