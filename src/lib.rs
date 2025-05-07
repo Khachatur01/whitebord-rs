@@ -16,6 +16,7 @@ use graphics_rs::standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDraw
 use graphics_rs::standard_tool_plugin::tool::Tool;
 use graphics_rs::view_port::ViewPort;
 use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
+use graphics_rs::standard_tool_plugin::tool::select_tool::SelectTool;
 
 #[wasm_bindgen]
 extern "C" {
@@ -69,7 +70,7 @@ impl Whiteboard {
     }
 
     pub fn activate_select_tool(&mut self) {
-        // self.activate_tool(SelectTool::new(self.view_port.clone()));
+        self.activate_tool(SelectTool::new());
     }
 
     pub fn mouse_down(&mut self, x: f64, y: f64) {
