@@ -44,9 +44,11 @@ impl Whiteboard {
     }
 
     pub fn activate_rectangle_tool(&mut self) {
+        let owner_id: String = self.id.owner_id().to_string();
+
         let draw_rectangle_tool = MoveDrawTool::new(
             move || {
-                let id: ElementId = ElementId::with_owner_id("weuif");
+                let id: ElementId = ElementId::with_owner_id(&owner_id);
                 RectangleEntity::with_standard_feature_set(id, Rectangle::zero_sized(Point::default()), ShapeStyle::default())
             }
         );
@@ -55,9 +57,11 @@ impl Whiteboard {
     }
 
     pub fn activate_polygon_tool(&mut self) {
+        let owner_id: String = self.id.owner_id().to_string();
+
         let draw_polygon_tool = ClickDrawTool::new(
             move || {
-                let id: ElementId = ElementId::with_owner_id("weuif");
+                let id: ElementId = ElementId::with_owner_id(&owner_id);
                 PolygonEntity::with_standard_feature_set(id, Polygon::new(&[]), ShapeStyle::default())
             }
         );
