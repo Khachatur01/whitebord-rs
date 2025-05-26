@@ -1,7 +1,3 @@
-use js_sys;
-use wasm_bindgen::prelude::wasm_bindgen;
-use wasm_bindgen::{JsCast, JsValue};
-use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 use graphics_rs::geometry::figure::circle::Circle;
 use graphics_rs::geometry::figure::ellipse::Ellipse;
 use graphics_rs::geometry::figure::polygon::Polygon;
@@ -9,10 +5,14 @@ use graphics_rs::geometry::figure::rectangle::Rectangle;
 use graphics_rs::geometry::figure::segment::Segment;
 use graphics_rs::standard_rendering_plugin::renderer::Renderer;
 use graphics_rs::standard_rendering_plugin::style::shape_style::ShapeStyle;
+use js_sys;
+use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::{JsCast, JsValue};
+use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
 #[wasm_bindgen]
 pub struct CanvasRenderer {
-    context: CanvasRenderingContext2d
+    context: CanvasRenderingContext2d,
 }
 
 #[wasm_bindgen]
@@ -32,10 +32,12 @@ impl CanvasRenderer {
 impl CanvasRenderer {
     fn apply_style(&mut self, style: &ShapeStyle) {
         self.context.set_fill_style_str(&style.fill_color.to_hex());
-        self.context.set_stroke_style_str(&style.stroke_color.to_hex());
+        self.context
+            .set_stroke_style_str(&style.stroke_color.to_hex());
         self.context.set_line_width(style.stroke_width);
 
-        let array: js_sys::Array = style.stroke_dash_array
+        let array: js_sys::Array = style
+            .stroke_dash_array
             .iter()
             .map(|x| JsValue::from_f64(*x as f64))
             .collect::<js_sys::Array>();
@@ -54,7 +56,8 @@ impl Renderer for CanvasRenderer {
 
         self.context.begin_path();
 
-        self.context.move_to(segment.start().x(), segment.start().y());
+        self.context
+            .move_to(segment.start().x(), segment.start().y());
         self.context.line_to(segment.end().x(), segment.end().y());
 
         self.context.stroke();

@@ -1,6 +1,6 @@
+use graphics_rs::core::entity::Identifier;
 use std::fmt::Display;
 use wasm_bindgen::prelude::wasm_bindgen;
-use graphics_rs::core::entity::Id;
 
 #[wasm_bindgen]
 #[derive(Clone, Eq, PartialEq)]
@@ -32,4 +32,4 @@ impl Display for ElementId {
     }
 }
 
-impl Id for ElementId {}
+impl Identifier for ElementId {}
