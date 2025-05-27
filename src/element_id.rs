@@ -1,9 +1,11 @@
 use graphics_rs::core::entity::Identifier;
 use std::fmt::Display;
 use wasm_bindgen::prelude::wasm_bindgen;
+use serde::Serialize;
+use graphics_rs::core::AsSerialize;
 
 #[wasm_bindgen]
-#[derive(Clone, Eq, PartialEq)]
+#[derive(Clone, Serialize, Eq, PartialEq)]
 pub struct ElementId {
     owner_id: String,
     index: usize,
@@ -29,6 +31,12 @@ impl ElementId {
 impl Display for ElementId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", format!("{}_{}", self.owner_id, self.index))
+    }
+}
+
+impl AsSerialize for ElementId {
+    fn as_serialize(&self) -> &dyn dyn_serde::ser::Serialize {
+        self
     }
 }
 
