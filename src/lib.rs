@@ -1,16 +1,12 @@
 mod atomic_view_port;
 mod element_id;
 mod renderer;
+mod element_type;
 
 use crate::atomic_view_port::AtomicViewPort;
-use crate::element_id::ElementId;
+use crate::element_type::ElementType;
 use graphics_rs::geometry::figure::point::Point;
-use graphics_rs::geometry::figure::polygon::Polygon;
-use graphics_rs::geometry::figure::rectangle::Rectangle;
-use graphics_rs::standard_entity_plugin::entity::geometric::polygon_entity::PolygonEntity;
-use graphics_rs::standard_entity_plugin::entity::geometric::rectangle_entity::RectangleEntity;
 use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
-use graphics_rs::standard_rendering_plugin::style::shape_style::ShapeStyle;
 use graphics_rs::standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
 use graphics_rs::standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
 use graphics_rs::standard_tool_plugin::tool::select_tool::SelectTool;
@@ -27,47 +23,52 @@ extern "C" {
 
 #[wasm_bindgen]
 pub struct Whiteboard {
-    view_port: AtomicViewPort<ElementId>,
+    owner_id: String,
+    view_port: AtomicViewPort,
 }
+
 
 #[wasm_bindgen]
 impl Whiteboard {
     pub fn new(owner_id: &str) -> Self {
         Self {
-            view_port: AtomicViewPort::new(ElementId::with_owner_id(owner_id)),
+            owner_id: owner_id.to_string(),
+            view_port: AtomicViewPort::new(),
         }
     }
+}
 
-    pub fn id(&self) -> ElementId {
-        self.view_port.read().expect("Can't lock view port for read to get id!").id().clone()
-    }
-
+impl Whiteboard {
     pub fn activate_rectangle_tool(&mut self) {
-        let owner_id: String = self.id().owner_id().to_string();
+        let owner_id: String = self.owner_id.clone();
 
-        let draw_rectangle_tool = MoveDrawTool::new(move || {
-            let id: ElementId = ElementId::with_owner_id(&owner_id);
-            RectangleEntity::with_standard_feature_set(id, Rectangle::zero_sized(Point::default()), ShapeStyle::default(),)
-        });
-
-        self.activate_tool(draw_rectangle_tool);
+        self.activate_tool(
+            MoveDrawTool::new(move || ElementType::Rectangle.default(&owner_id))
+        );
     }
 
     pub fn activate_polygon_tool(&mut self) {
-        let owner_id: String = self.id().owner_id().to_string();
+        let owner_id: String = self.owner_id.clone();
 
-        let draw_polygon_tool = ClickDrawTool::new(move || {
-            let id: ElementId = ElementId::with_owner_id(&owner_id);
-            PolygonEntity::with_standard_feature_set(id, Polygon::new(&[]), ShapeStyle::default())
-        });
-
-        self.activate_tool(draw_polygon_tool);
+        self.activate_tool(
+            ClickDrawTool::new(move || ElementType::Polygon.default(&owner_id))
+        );
     }
 
     pub fn activate_select_tool(&mut self) {
         self.activate_tool(SelectTool::new());
     }
 
+    fn activate_tool(&mut self, tool: impl Tool + 'static) {
+        let Ok(mut view_port) = self.view_port.write() else {
+            return;
+        };
+
+        view_port.activate_tool(tool);
+    }
+}
+
+impl Whiteboard {
     pub fn mouse_down(&self, x: f64, y: f64) {
         let Ok(mut view_port) = self.view_port.write() else {
             return;
@@ -98,7 +99,9 @@ impl Whiteboard {
             PointingDevice::Mouse,
         ));
     }
+}
 
+impl Whiteboard {
     pub fn render_canvas(&self, renderer: &mut CanvasRenderer) {
         let Ok(view_port) = self.view_port.read() else {
             return;
@@ -115,13 +118,5 @@ impl Whiteboard {
 
         renderer.clear();
         view_port.render(renderer);
-    }
-
-    fn activate_tool(&mut self, tool: impl Tool + 'static) {
-        let Ok(mut view_port) = self.view_port.write() else {
-            return;
-        };
-
-        view_port.activate_tool(tool);
     }
 }

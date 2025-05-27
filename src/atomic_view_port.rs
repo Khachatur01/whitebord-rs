@@ -1,23 +1,23 @@
-use graphics_rs::core::entity::Identifier;
 use graphics_rs::view_port::ViewPort;
 use std::sync::{Arc, LockResult, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
 #[derive(Clone)]
-pub struct AtomicViewPort<Id> {
-    internal: Arc<RwLock<ViewPort<Id>>>,
+pub struct AtomicViewPort {
+    internal: Arc<RwLock<ViewPort>>,
 }
-impl<Id: Identifier> AtomicViewPort<Id> {
-    pub fn new(id: Id) -> Self {
+
+impl AtomicViewPort {
+    pub fn new() -> Self {
         Self {
-            internal: Arc::new(RwLock::new(ViewPort::new(id))),
+            internal: Arc::new(RwLock::new(ViewPort::new())),
         }
     }
 
-    pub fn read(&self) -> LockResult<RwLockReadGuard<ViewPort<Id>>> {
+    pub fn read(&self) -> LockResult<RwLockReadGuard<ViewPort>> {
         self.internal.read()
     }
 
-    pub fn write(&self) -> LockResult<RwLockWriteGuard<ViewPort<Id>>> {
+    pub fn write(&self) -> LockResult<RwLockWriteGuard<ViewPort>> {
         self.internal.write()
     }
 }

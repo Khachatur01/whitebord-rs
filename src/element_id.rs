@@ -1,21 +1,23 @@
-use graphics_rs::core::entity::Identifier;
+use crate::element_type::ElementType;
+use graphics_rs::core::{AsSerialize, EntityId};
+use serde::Serialize;
 use std::fmt::Display;
 use wasm_bindgen::prelude::wasm_bindgen;
-use serde::Serialize;
-use graphics_rs::core::AsSerialize;
 
 #[wasm_bindgen]
 #[derive(Clone, Serialize, Eq, PartialEq)]
 pub struct ElementId {
     owner_id: String,
     index: usize,
+    element_type: ElementType,
 }
 
 impl ElementId {
-    pub fn with_owner_id(id: &str) -> Self {
+    pub fn generate(id: &str, element_type: ElementType) -> Self {
         Self {
             owner_id: id.to_string(),
             index: js_sys::Date::new_0().get_milliseconds() as usize,
+            element_type
         }
     }
 
@@ -40,4 +42,4 @@ impl AsSerialize for ElementId {
     }
 }
 
-impl Identifier for ElementId {}
+impl EntityId for ElementId {}
