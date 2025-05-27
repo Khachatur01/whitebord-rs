@@ -1,13 +1,12 @@
 mod atomic_view_port;
-mod element_id;
 mod renderer;
-mod element_type;
+mod element;
 
 use crate::atomic_view_port::AtomicViewPort;
-use crate::element_type::ElementType;
+use crate::element::{build_default, build_from_json};
+use element::r#type::ElementType;
 use graphics_rs::geometry::figure::point::Point;
 use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
-use graphics_rs::standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
 use graphics_rs::standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
 use graphics_rs::standard_tool_plugin::tool::select_tool::SelectTool;
 use graphics_rs::standard_tool_plugin::tool::{Interaction, PointingDevice, Tool};
@@ -43,7 +42,8 @@ impl Whiteboard {
         let owner_id: String = self.owner_id.clone();
 
         self.activate_tool(
-            MoveDrawTool::new(move || ElementType::Rectangle.default(&owner_id))
+            MoveDrawTool::new(move || build_default(ElementType::Rectangle, owner_id.clone())),
+            // MoveDrawTool::new(move || build_from_json("{}")),
         );
     }
 
@@ -51,7 +51,8 @@ impl Whiteboard {
         let owner_id: String = self.owner_id.clone();
 
         self.activate_tool(
-            ClickDrawTool::new(move || ElementType::Polygon.default(&owner_id))
+            // MoveDrawTool::new(move || build_default(ElementType::Polygon, owner_id.clone())),
+            MoveDrawTool::new(move || build_from_json("{}")),
         );
     }
 

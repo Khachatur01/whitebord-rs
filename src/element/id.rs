@@ -1,11 +1,11 @@
-use crate::element_type::ElementType;
+use crate::element::r#type::ElementType;
 use graphics_rs::core::{AsSerialize, EntityId};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]
-#[derive(Clone, Serialize, Eq, PartialEq)]
+#[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub struct ElementId {
     owner_id: String,
     index: usize,
@@ -27,6 +27,10 @@ impl ElementId {
 
     pub fn index(&self) -> usize {
         self.index
+    }
+
+    pub fn element_type(&self) -> &ElementType {
+        &self.element_type
     }
 }
 
