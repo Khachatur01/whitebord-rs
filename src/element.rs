@@ -13,10 +13,12 @@ pub enum Build {
     }
 }
 
-pub fn build_from_json(json: &str) -> Entity {
-    serde_json::from_str::<JsonEntity>(json).unwrap().into()
-}
+impl Build {
+    pub fn entity_from_json(json: &str) -> Entity {
+        serde_json::from_str::<JsonEntity>(json).unwrap().into()
+    }
 
-pub fn build_default(element_type: ElementType, owner_id: String) -> Entity {
-    element_type.build(Build::Default { owner_id })
+    pub fn default_entity(element_type: ElementType, owner_id: String) -> Entity {
+        element_type.build(Build::Default { owner_id })
+    }
 }

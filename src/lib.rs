@@ -3,10 +3,11 @@ mod renderer;
 mod element;
 
 use crate::atomic_view_port::AtomicViewPort;
-use crate::element::{build_default, build_from_json};
+use crate::element::Build;
 use element::r#type::ElementType;
 use graphics_rs::geometry::figure::point::Point;
 use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
+use graphics_rs::standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
 use graphics_rs::standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
 use graphics_rs::standard_tool_plugin::tool::select_tool::SelectTool;
 use graphics_rs::standard_tool_plugin::tool::{Interaction, PointingDevice, Tool};
@@ -30,6 +31,9 @@ pub struct Whiteboard {
 #[wasm_bindgen]
 impl Whiteboard {
     pub fn new(owner_id: &str) -> Self {
+        /* enable panic message printing */
+        console_error_panic_hook::set_once();
+
         Self {
             owner_id: owner_id.to_string(),
             view_port: AtomicViewPort::new(),
@@ -37,13 +41,14 @@ impl Whiteboard {
     }
 }
 
+#[wasm_bindgen]
 impl Whiteboard {
     pub fn activate_rectangle_tool(&mut self) {
         let owner_id: String = self.owner_id.clone();
 
         self.activate_tool(
-            MoveDrawTool::new(move || build_default(ElementType::Rectangle, owner_id.clone())),
-            // MoveDrawTool::new(move || build_from_json("{}")),
+            MoveDrawTool::new(move || Build::default_entity(ElementType::Rectangle, owner_id.clone())),
+            // MoveDrawTool::new(move || Build::entity_from_json("{}")),
         );
     }
 
@@ -51,8 +56,8 @@ impl Whiteboard {
         let owner_id: String = self.owner_id.clone();
 
         self.activate_tool(
-            // MoveDrawTool::new(move || build_default(ElementType::Polygon, owner_id.clone())),
-            MoveDrawTool::new(move || build_from_json("{}")),
+            ClickDrawTool::new(move || Build::default_entity(ElementType::Polygon, owner_id.clone())),
+            // ClickDrawTool::new(move || Build::entity_from_json("{}")),
         );
     }
 
@@ -69,6 +74,7 @@ impl Whiteboard {
     }
 }
 
+#[wasm_bindgen]
 impl Whiteboard {
     pub fn mouse_down(&self, x: f64, y: f64) {
         let Ok(mut view_port) = self.view_port.write() else {
@@ -102,6 +108,7 @@ impl Whiteboard {
     }
 }
 
+#[wasm_bindgen]
 impl Whiteboard {
     pub fn render_canvas(&self, renderer: &mut CanvasRenderer) {
         let Ok(view_port) = self.view_port.read() else {
