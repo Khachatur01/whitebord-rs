@@ -1,5 +1,6 @@
+use std::ops::Deref;
 use graphics_rs::view_port::ViewPort;
-use std::sync::{Arc, LockResult, RwLock, RwLockReadGuard, RwLockWriteGuard};
+use std::sync::{Arc, LockResult, PoisonError, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
 #[derive(Clone)]
 pub struct AtomicViewPort {
@@ -19,5 +20,15 @@ impl AtomicViewPort {
 
     pub fn write(&self) -> LockResult<RwLockWriteGuard<ViewPort>> {
         self.internal.write()
+    }
+
+    pub fn read_ref<R, F: FnOnce(RwLockReadGuard<'_, ViewPort>) -> R>(&self, predicate: F) -> Result<R, PoisonError<RwLockReadGuard<ViewPort>>> {
+        let view_port: RwLockReadGuard<ViewPort> = self.internal.read()?;
+        Ok(predicate(view_port))
+    }
+
+    pub fn write_ref<R, F: FnOnce(RwLockWriteGuard<'_, ViewPort>) -> R>(&self, predicate: F) -> Result<R, PoisonError<RwLockWriteGuard<ViewPort>>> {
+        let view_port: RwLockWriteGuard<ViewPort> = self.internal.write()?;
+        Ok(predicate(view_port))
     }
 }
