@@ -1,6 +1,6 @@
+use graphics_rs::entity_model_feature::entity::Entity;
 use crate::element::json_entity::JsonEntity;
 use crate::element::r#type::ElementType;
-use graphics_rs::core::entity::Entity;
 
 mod id;
 pub mod r#type;

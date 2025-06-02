@@ -1,34 +1,43 @@
-use std::ops::Deref;
-use graphics_rs::view_port::ViewPort;
-use std::sync::{Arc, LockResult, PoisonError, RwLock, RwLockReadGuard, RwLockWriteGuard};
+use std::sync::{Arc, RwLock};
+use graphics_rs::entity_model_feature::entity::Entity;
+use graphics_rs::standard_rendering_plugin::Render;
+use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
+
+#[derive(Debug)]
+pub struct LockError<'a>(&'a str);
 
 #[derive(Clone)]
-pub struct AtomicViewPort {
-    internal: Arc<RwLock<ViewPort>>,
+pub struct ViewPort {
+    entities: Arc<RwLock<Vec<Entity>>>,
 }
 
-impl AtomicViewPort {
+impl ViewPort {
     pub fn new() -> Self {
         Self {
-            internal: Arc::new(RwLock::new(ViewPort::new())),
+            entities: Arc::new(RwLock::new(vec![])),
         }
     }
 
-    pub fn read(&self) -> LockResult<RwLockReadGuard<ViewPort>> {
-        self.internal.read()
-    }
+    pub fn add_entity(&mut self, entity: Entity) -> Result<(), LockError> {
+        self.entities
+            .write()
+            .map_err(|_| LockError("Failed to acquire lock"))?
+            .push(entity);
 
-    pub fn write(&self) -> LockResult<RwLockWriteGuard<ViewPort>> {
-        self.internal.write()
+        Ok(())
     }
+}
 
-    pub fn read_ref<R, F: FnOnce(RwLockReadGuard<'_, ViewPort>) -> R>(&self, predicate: F) -> Result<R, PoisonError<RwLockReadGuard<ViewPort>>> {
-        let view_port: RwLockReadGuard<ViewPort> = self.internal.read()?;
-        Ok(predicate(view_port))
-    }
+impl Renderable for ViewPort {
+    fn render(&self, renderer: &mut dyn Renderer) {
+        let Ok(entities) = self.entities.read() else {
+            return;
+        };
 
-    pub fn write_ref<R, F: FnOnce(RwLockWriteGuard<'_, ViewPort>) -> R>(&self, predicate: F) -> Result<R, PoisonError<RwLockWriteGuard<ViewPort>>> {
-        let view_port: RwLockWriteGuard<ViewPort> = self.internal.write()?;
-        Ok(predicate(view_port))
+        for entity in entities.iter() {
+            if let Some(render) = entity.query::<Render>() {
+                (render.render)(entity, renderer);
+            }
+        }
     }
 }

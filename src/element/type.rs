@@ -1,9 +1,6 @@
 use crate::element::id::ElementId;
 use crate::element::json_entity::JsonEntity;
 use crate::element::Build;
-use graphics_rs::core::entity::Entity;
-use graphics_rs::core::feature_set::FeatureSet;
-use graphics_rs::core::Model;
 use graphics_rs::geometry::figure::point::Point;
 use graphics_rs::geometry::figure::polygon::Polygon;
 use graphics_rs::geometry::figure::rectangle::Rectangle;
@@ -16,6 +13,9 @@ use graphics_rs::standard_rendering_plugin::style::text_style::TextStyle;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::wasm_bindgen;
+use graphics_rs::entity_model_feature::entity::Entity;
+use graphics_rs::entity_model_feature::feature_set::FeatureSet;
+use graphics_rs::entity_model_feature::Model;
 
 #[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]
 #[wasm_bindgen]

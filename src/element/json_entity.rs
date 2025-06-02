@@ -1,7 +1,7 @@
 use crate::element::id::ElementId;
 use crate::element::Build;
-use graphics_rs::core::entity::Entity;
 use serde::Deserialize;
+use graphics_rs::entity_model_feature::entity::Entity;
 
 #[derive(Deserialize)]
 pub struct JsonEntity {

@@ -92,8 +92,6 @@ impl Renderer for SVGRenderer {
             .collect::<Vec<String>>()
             .join(" ");
 
-        log(points.as_str());
-
         svg_polygon.set_attribute("points", &points).expect("");
 
         self.svg

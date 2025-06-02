@@ -1,8 +1,8 @@
 use crate::element::r#type::ElementType;
-use graphics_rs::core::{AsSerialize, EntityId};
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use wasm_bindgen::prelude::wasm_bindgen;
+use graphics_rs::entity_model_feature::{AsSerialize, EntityId};
 
 #[wasm_bindgen]
 #[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]
