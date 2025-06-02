@@ -1,21 +1,21 @@
 use crate::element::id::ElementId;
 use crate::element::json_entity::JsonEntity;
 use crate::element::Build;
-use graphics_rs::geometry::figure::point::Point;
-use graphics_rs::geometry::figure::polygon::Polygon;
-use graphics_rs::geometry::figure::rectangle::Rectangle;
-use graphics_rs::standard_entity_plugin::model::container_model::ContainerModel;
-use graphics_rs::standard_entity_plugin::model::geometric::polygon_model::PolygonModel;
-use graphics_rs::standard_entity_plugin::model::geometric::rectangle_model::RectangleModel;
-use graphics_rs::standard_entity_plugin::model::text_model::TextModel;
-use graphics_rs::standard_rendering_plugin::style::shape_style::ShapeStyle;
-use graphics_rs::standard_rendering_plugin::style::text_style::TextStyle;
+use geometry::figure::point::Point;
+use geometry::figure::polygon::Polygon;
+use geometry::figure::rectangle::Rectangle;
+use standard_entity_plugin::model::container_model::ContainerModel;
+use standard_entity_plugin::model::geometric::polygon_model::PolygonModel;
+use standard_entity_plugin::model::geometric::rectangle_model::RectangleModel;
+use standard_entity_plugin::model::text_model::TextModel;
+use standard_rendering_plugin::style::shape_style::ShapeStyle;
+use standard_rendering_plugin::style::text_style::TextStyle;
+use entity_model_feature::entity::Entity;
+use entity_model_feature::feature_set::FeatureSet;
+use entity_model_feature::Model;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::wasm_bindgen;
-use graphics_rs::entity_model_feature::entity::Entity;
-use graphics_rs::entity_model_feature::feature_set::FeatureSet;
-use graphics_rs::entity_model_feature::Model;
 
 #[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]
 #[wasm_bindgen]

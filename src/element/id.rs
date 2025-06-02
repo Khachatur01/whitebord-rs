@@ -2,7 +2,7 @@ use crate::element::r#type::ElementType;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use wasm_bindgen::prelude::wasm_bindgen;
-use graphics_rs::entity_model_feature::{AsSerialize, EntityId};
+use entity_model_feature::{AsSerialize, EntityId};
 
 #[wasm_bindgen]
 #[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]

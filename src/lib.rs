@@ -1,29 +1,28 @@
 mod atomic_view_port;
 mod renderer;
 mod element;
+mod from_js_key;
 
-use wasm_bindgen::closure::Closure;
 use crate::atomic_view_port::ViewPort;
 use crate::element::Build;
 use element::r#type::ElementType;
-use graphics_rs::geometry::figure::point::Point;
-use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
-use graphics_rs::standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
-use graphics_rs::standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
-use graphics_rs::standard_tool_plugin::tool::select_tool::SelectTool;
-use graphics_rs::standard_tool_plugin::tool::{Key, PointingDevice, Tool};
-use graphics_rs::standard_tool_plugin::tool::Interaction;
+use geometry::figure::point::Point;
+use standard_rendering_plugin::renderer::{Renderable, Renderer};
+use standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
+use standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
+use standard_tool_plugin::tool::select_tool::SelectTool;
+use standard_tool_plugin::tool::{PointingDevice, Tool};
+use standard_tool_plugin::tool::Interaction;
 use renderer::canvas_renderer::CanvasRenderer;
 use renderer::svg_renderer::SVGRenderer;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen_futures::spawn_local;
+use crate::from_js_key::from_js_key;
 
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
-    fn setInterval(closure: &Closure<dyn FnMut()>, millis: u32) -> f64;
-    fn clearInterval(token: f64);
 }
 
 #[wasm_bindgen]
@@ -98,7 +97,7 @@ impl Whiteboard {
 
         active_tool.interact(
             Interaction::PointerDown(
-                Point::new(x, y),
+                (x, y).into(),
                 PointingDevice::Mouse,
             )
         );
@@ -111,7 +110,7 @@ impl Whiteboard {
 
         active_tool.interact(
             Interaction::PointerMove(
-                Point::new(x, y),
+                (x, y).into(),
                 PointingDevice::Mouse,
             )
         );
@@ -131,45 +130,27 @@ impl Whiteboard {
     }
 
     pub fn key_down(&mut self, key: &str) {
-        let interaction = match key {
-            "Escape" => {
-                Interaction::KeyDown(Key::Esc)
-            }
-            "Enter" => {
-                Interaction::KeyDown(Key::Enter)
-            }
-            "Backspace" => {
-                Interaction::KeyDown(Key::Backspace)
-            }
-            "Delete" => {
-                Interaction::KeyDown(Key::Delete)
-            }
-            "ArrowLeft" => {
-                Interaction::KeyDown(Key::ArrowLeft)
-            }
-            "ArrowUp" => {
-                Interaction::KeyDown(Key::ArrowUp)
-            }
-            "ArrowRight" => {
-                Interaction::KeyDown(Key::ArrowRight)
-            }
-            "ArrowDown" => {
-                Interaction::KeyDown(Key::ArrowDown)
-            }
-            _ => {
-                return;
-            }
+        let Some(key) = from_js_key(key) else {
+            return;
         };
 
         let Some(active_tool) = &mut self.active_tool else {
             return;
         };
 
-        active_tool.interact(interaction);
+        active_tool.interact(Interaction::KeyDown(key));
     }
 
     pub fn key_up(&mut self, key: &str) {
+        let Some(key) = from_js_key(key) else {
+            return;
+        };
 
+        let Some(active_tool) = &mut self.active_tool else {
+            return;
+        };
+
+        active_tool.interact(Interaction::KeyUp(key));
     }
 }
 

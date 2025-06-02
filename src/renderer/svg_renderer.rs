@@ -1,10 +1,10 @@
-use graphics_rs::geometry::figure::circle::Circle;
-use graphics_rs::geometry::figure::ellipse::Ellipse;
-use graphics_rs::geometry::figure::polygon::Polygon;
-use graphics_rs::geometry::figure::rectangle::Rectangle;
-use graphics_rs::geometry::figure::segment::Segment;
-use graphics_rs::standard_rendering_plugin::renderer::Renderer;
-use graphics_rs::standard_rendering_plugin::style::shape_style::ShapeStyle;
+use geometry::figure::circle::Circle;
+use geometry::figure::ellipse::Ellipse;
+use geometry::figure::polygon::Polygon;
+use geometry::figure::rectangle::Rectangle;
+use geometry::figure::segment::Segment;
+use standard_rendering_plugin::renderer::Renderer;
+use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use web_sys::{Node, SvgElement, SvgLineElement, SvgPolygonElement, SvgRectElement};

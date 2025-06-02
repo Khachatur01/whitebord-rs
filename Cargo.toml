@@ -22,7 +22,11 @@ lto = true
 codegen-units = 1
 
 [dependencies]
-graphics-rs = { path = "../graphics-rs" }
+entity-model-feature = { path = "../graphics-rs/lib/entity-model-feature" }
+geometry = { path = "../graphics-rs/lib/geometry" }
+standard-entity-plugin = { path = "../graphics-rs/plugin/standard-entity-plugin" }
+standard-rendering-plugin = { path = "../graphics-rs/plugin/standard-rendering-plugin" }
+standard-tool-plugin = { path = "../graphics-rs/plugin/standard-tool-plugin" }
 
 wasm-bindgen = "0.2.100"
 wasm-bindgen-futures = "0.4.50"

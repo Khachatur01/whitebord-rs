@@ -1,7 +1,7 @@
 use std::sync::{Arc, RwLock};
-use graphics_rs::entity_model_feature::entity::Entity;
-use graphics_rs::standard_rendering_plugin::Render;
-use graphics_rs::standard_rendering_plugin::renderer::{Renderable, Renderer};
+use entity_model_feature::entity::Entity;
+use standard_rendering_plugin::Render;
+use standard_rendering_plugin::renderer::{Renderable, Renderer};
 
 #[derive(Debug)]
 pub struct LockError<'a>(&'a str);

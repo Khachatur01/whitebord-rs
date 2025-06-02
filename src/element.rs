@@ -1,4 +1,4 @@
-use graphics_rs::entity_model_feature::entity::Entity;
+use entity_model_feature::entity::Entity;
 use crate::element::json_entity::JsonEntity;
 use crate::element::r#type::ElementType;
 
