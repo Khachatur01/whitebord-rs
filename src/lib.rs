@@ -55,7 +55,7 @@ impl Whiteboard {
         let rectangle_tool: MoveDrawTool = MoveDrawTool::new(move || Build::default_entity(ElementType::Rectangle, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-        let receiver = rectangle_tool.hook.end_drawing.receiver();
+        let receiver = rectangle_tool.event.end_drawing();
 
         spawn_local(async move {
             while let Ok(entity) = receiver.recv().await {
@@ -72,7 +72,7 @@ impl Whiteboard {
         let polygon_tool: ClickDrawTool = ClickDrawTool::new(move || Build::default_entity(ElementType::Polygon, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-        let receiver = polygon_tool.hook.end_drawing.receiver();
+        let receiver = polygon_tool.event.end_drawing();
 
         spawn_local(async move {
             while let Ok(entity) = receiver.recv().await {
