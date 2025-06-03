@@ -2,7 +2,7 @@ use crate::element::r#type::ElementType;
 use entity_model_feature::entity_id::EntityId;
 use entity_model_feature::AsSerialize;
 use serde::{Deserialize, Serialize};
-use std::fmt::Display;
+use std::fmt::{Display};
 use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]
@@ -32,6 +32,10 @@ impl Id {
 
     pub fn element_type(&self) -> &ElementType {
         &self.element_type
+    }
+
+    pub fn as_html_id(&self) -> String {
+        format!("{}-{}", self.owner_id, self.index)
     }
 }
 

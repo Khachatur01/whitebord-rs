@@ -70,3 +70,5 @@ impl UpdateSVG<SVGLine> for SvgLineElement {
         self.set_css(css);
     }
 }
+
+/* todo: Implement UpdateSVG for all supported svg element types */
