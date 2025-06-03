@@ -1,8 +1,10 @@
-use entity_model_feature::entity::Entity;
+use crate::element::id::Id;
 use crate::element::json_entity::JsonEntity;
 use crate::element::r#type::ElementType;
+use entity_model_feature::entity::Entity;
+use entity_model_feature::entity_id::EntityId;
 
-mod id;
+pub mod id;
 pub mod r#type;
 pub mod json_entity;
 
@@ -14,11 +16,11 @@ pub enum Build {
 }
 
 impl Build {
-    pub fn entity_from_json(json: &str) -> Entity {
+    pub fn entity_from_json(json: &str) -> Entity<Id> {
         serde_json::from_str::<JsonEntity>(json).unwrap().into()
     }
 
-    pub fn default_entity(element_type: ElementType, owner_id: String) -> Entity {
+    pub fn default_entity(element_type: ElementType, owner_id: String) -> Entity<Id> {
         element_type.build(Build::Default { owner_id })
     }
 }

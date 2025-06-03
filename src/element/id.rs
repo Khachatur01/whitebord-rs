@@ -1,18 +1,19 @@
 use crate::element::r#type::ElementType;
+use entity_model_feature::entity_id::EntityId;
+use entity_model_feature::AsSerialize;
 use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use wasm_bindgen::prelude::wasm_bindgen;
-use entity_model_feature::{AsSerialize, EntityId};
 
 #[wasm_bindgen]
 #[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]
-pub struct ElementId {
+pub struct Id {
     owner_id: String,
     index: usize,
     element_type: ElementType,
 }
 
-impl ElementId {
+impl Id {
     pub fn generate(id: &str, element_type: ElementType) -> Self {
         Self {
             owner_id: id.to_string(),
@@ -34,16 +35,16 @@ impl ElementId {
     }
 }
 
-impl Display for ElementId {
+impl Display for Id {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", format!("{}_{}", self.owner_id, self.index))
     }
 }
 
-impl AsSerialize for ElementId {
+impl AsSerialize for Id {
     fn as_serialize(&self) -> &dyn dyn_serde::ser::Serialize {
         self
     }
 }
 
-impl EntityId for ElementId {}
+impl EntityId for Id {}

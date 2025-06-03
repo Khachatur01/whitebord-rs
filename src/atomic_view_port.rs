@@ -1,14 +1,15 @@
-use std::sync::{Arc, RwLock};
+use crate::element::id::Id;
 use entity_model_feature::entity::Entity;
-use standard_rendering_plugin::Render;
 use standard_rendering_plugin::renderer::{Renderable, Renderer};
+use standard_rendering_plugin::Render;
+use std::sync::{Arc, RwLock};
 
 #[derive(Debug)]
 pub struct LockError<'a>(&'a str);
 
 #[derive(Clone)]
 pub struct ViewPort {
-    entities: Arc<RwLock<Vec<Entity>>>,
+    entities: Arc<RwLock<Vec<Entity<Id>>>>,
 }
 
 impl ViewPort {
@@ -18,7 +19,7 @@ impl ViewPort {
         }
     }
 
-    pub fn add_entity(&mut self, entity: Entity) -> Result<(), LockError> {
+    pub fn add_entity(&mut self, entity: Entity<Id>) -> Result<(), LockError> {
         self.entities
             .write()
             .map_err(|_| LockError("Failed to acquire lock"))?
@@ -35,7 +36,7 @@ impl Renderable for ViewPort {
         };
 
         for entity in entities.iter() {
-            if let Some(render) = entity.query::<Render>() {
+            if let Some(render) = entity.query::<Render<Id>>() {
                 (render.render)(entity, renderer);
             }
         }

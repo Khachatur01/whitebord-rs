@@ -4,20 +4,21 @@ mod element;
 mod from_js_key;
 
 use crate::atomic_view_port::ViewPort;
+use crate::element::id::Id;
 use crate::element::Build;
+use crate::from_js_key::from_js_key;
 use element::r#type::ElementType;
 use geometry::figure::point::Point;
+use renderer::canvas_renderer::CanvasRenderer;
+use renderer::svg_renderer::SVGRenderer;
 use standard_rendering_plugin::renderer::{Renderable, Renderer};
 use standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
 use standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
 use standard_tool_plugin::tool::select_tool::SelectTool;
-use standard_tool_plugin::tool::{PointingDevice, Tool};
 use standard_tool_plugin::tool::Interaction;
-use renderer::canvas_renderer::CanvasRenderer;
-use renderer::svg_renderer::SVGRenderer;
+use standard_tool_plugin::tool::{PointingDevice, Tool};
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen_futures::spawn_local;
-use crate::from_js_key::from_js_key;
 
 #[wasm_bindgen]
 extern "C" {
@@ -52,7 +53,7 @@ impl Whiteboard {
     pub fn activate_rectangle_tool(&mut self) {
         let owner_id: String = self.owner_id.clone();
 
-        let rectangle_tool: MoveDrawTool = MoveDrawTool::new(move || Build::default_entity(ElementType::Rectangle, owner_id.clone()));
+        let rectangle_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::Rectangle, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
         let receiver = rectangle_tool.event.end_drawing();
@@ -69,7 +70,7 @@ impl Whiteboard {
     pub fn activate_polygon_tool(&mut self) {
         let owner_id: String = self.owner_id.clone();
 
-        let polygon_tool: ClickDrawTool = ClickDrawTool::new(move || Build::default_entity(ElementType::Polygon, owner_id.clone()));
+        let polygon_tool: ClickDrawTool<Id> = ClickDrawTool::new(move || Build::default_entity(ElementType::Polygon, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
         let receiver = polygon_tool.event.end_drawing();
@@ -84,7 +85,7 @@ impl Whiteboard {
     }
 
     pub fn activate_select_tool(&mut self) {
-        self.active_tool = Some(Box::new(SelectTool::new()));
+        self.active_tool = Some(Box::new(SelectTool::<Id>::new()));
     }
 }
 

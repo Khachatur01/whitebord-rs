@@ -36,11 +36,13 @@ web-sys = { version = "0.3.77", features = [
     "HtmlCanvasElement",
     "CanvasRenderingContext2d",
     "SvgsvgElement",
+    "SvgCircleElement",
     "SvgRectElement",
     "SvgLineElement",
     "SvgPolygonElement",
     "Window",
-    "Document"
+    "Document",
+    "CssStyleDeclaration"
 ] }
 js-sys = "0.3.77"
 
