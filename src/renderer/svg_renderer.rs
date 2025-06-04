@@ -18,12 +18,19 @@ extern "C" {
 #[wasm_bindgen]
 pub struct SVGRenderer {
     svg: SvgElement,
+    document: web_sys::Document,
 }
 
 #[wasm_bindgen]
 impl SVGRenderer {
     pub fn new(svg: SvgElement) -> Self {
-        Self { svg }
+        let window = web_sys::window().expect("global window does not exists");
+        let document = window.document().expect("global document does not exists");
+
+        Self {
+            svg,
+            document
+        }
     }
 }
 

@@ -28,7 +28,7 @@ impl Styles for SvgElement {
         }
 
         let style = style.css_text();
-        self.set_attribute("style", style.as_str()).expect(format!("Can't set css text {style}").as_str());
+        self.set_attribute("style", style.as_str()).expect(format!("Can't set style attribute {style}").as_str());
     }
 }
 
