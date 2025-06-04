@@ -31,7 +31,8 @@ impl ViewPort {
 
 impl Renderable for ViewPort {
     fn render(&self, renderer: &mut dyn Renderer) {
-        let Ok(entities) = self.entities.read() else {
+        /* Use try_read to not lock the current thread for rendering.  */
+        let Ok(entities) = self.entities.try_read() else {
             return;
         };
 

@@ -124,7 +124,7 @@ impl Whiteboard {
 
         active_tool.interact(
             Interaction::PointerUp(
-                Point::new(x, y),
+                Point::new_2d(x, y),
                 PointingDevice::Mouse,
             )
         );
