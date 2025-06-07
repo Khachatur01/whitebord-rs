@@ -12,7 +12,8 @@ use standard_rendering_plugin::renderer::renderer::Renderer;
 use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
-use web_sys::{Node, SvgElement, SvgLineElement, SvgPolygonElement, SvgRectElement};
+use web_sys::{Node, SvgElement, SvgLineElement, SvgPathElement, SvgPolygonElement, SvgRectElement};
+use geometry::figure::path::Path;
 
 #[wasm_bindgen]
 extern "C" {
@@ -44,11 +45,31 @@ impl Renderer for SVGRenderer {
         self.svg.set_inner_html("");
     }
 
-    fn segment_2d(&mut self, segment: &Segment<Point2D>, style: &ShapeStyle) {
-        let window = web_sys::window().expect("global window does not exists");
-        let document = window.document().expect("global document does not exists");
+    fn path(&mut self, path: &Path, style: &ShapeStyle) {
+        let svg_path = self.document
+            .create_element_ns(Some("http://www.w3.org/2000/svg"), "path")
+            .expect("can't create svg path element")
+            .dyn_into::<SvgPathElement>()
+            .expect("can't create svg path element");
 
-        let svg_line = document
+        svg_path
+            .set_attribute("d", &path.to_svg_path())
+            .expect("TODO: panic message");
+
+        svg_path
+            .set_attribute("fill", "none")
+            .expect("TODO: panic message");
+        svg_path
+            .set_attribute("stroke", "black")
+            .expect("TODO: panic message");
+
+        self.svg
+            .append_child(&svg_path.dyn_into::<Node>().expect(""))
+            .expect("");
+    }
+
+    fn segment_2d(&mut self, segment: &Segment<Point2D>, style: &ShapeStyle) {
+        let svg_line = self.document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "line")
             .expect("can't create svg line element")
             .dyn_into::<SvgLineElement>()
@@ -81,10 +102,7 @@ impl Renderer for SVGRenderer {
     }
 
     fn polygon_2d(&mut self, polygon: &Polygon<Point2D>, shape_style: &ShapeStyle) {
-        let window = web_sys::window().expect("global window does not exists");
-        let document = window.document().expect("global document does not exists");
-
-        let svg_polygon = document
+        let svg_polygon = self.document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "polygon")
             .expect("can't create svg polygon element")
             .dyn_into::<SvgPolygonElement>()
@@ -116,10 +134,7 @@ impl Renderer for SVGRenderer {
     }
 
     fn rectangle(&mut self, rectangle: &Rectangle, style: &ShapeStyle) {
-        let window = web_sys::window().expect("global window does not exists");
-        let document = window.document().expect("global document does not exists");
-
-        let svg_rectangle = document
+        let svg_rectangle = self.document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "rect")
             .expect("can't create svg rectangle element")
             .dyn_into::<SvgRectElement>()

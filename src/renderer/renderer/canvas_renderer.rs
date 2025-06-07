@@ -14,6 +14,8 @@ use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
+use geometry::figure::path::command::Command;
+use geometry::figure::path::Path;
 
 #[wasm_bindgen]
 pub struct CanvasRenderer {
@@ -54,6 +56,28 @@ impl CanvasRenderer {
 impl Renderer for CanvasRenderer {
     fn clear(&mut self) {
         self.context.reset();
+    }
+
+    fn path(&mut self, path: &Path, style: &ShapeStyle) {
+        self.apply_style(style);
+
+        self.context.begin_path();
+
+        for command in path.commands() {
+            match command {
+                Command::MoveTo(move_to) =>
+                    self.context.move_to(move_to.to_point.x, move_to.to_point.y),
+                Command::LineTo(line_to) =>
+                    self.context.line_to(line_to.to_point.x, line_to.to_point.y),
+                Command::HorizontalLineTo(horizontal_line_to) => {}
+                Command::VerticalLineTo(vertical_line_to) => {}
+                Command::BezierTo(bezier_to) => {}
+                Command::ArcTo(arc_to) => {}
+                Command::Close => {}
+            }
+        }
+
+        self.context.stroke();
     }
 
     fn segment_2d(&mut self, segment: &Segment<Point2D>, style: &ShapeStyle) {

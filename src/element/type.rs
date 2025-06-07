@@ -16,12 +16,15 @@ use standard_entity_plugin::model::text_model::TextModel;
 use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use standard_rendering_plugin::style::text_style::TextStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
+use geometry::figure::path::Path;
+use standard_entity_plugin::model::free_hand_model::FreeHandModel;
 
 #[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]
 #[wasm_bindgen]
 pub enum ElementType {
     Rectangle,
     Polygon,
+    FreeHand,
     Text,
     Container,
 }
@@ -46,6 +49,16 @@ impl ElementType {
                         PolygonModel::entity(
                             Id::generate(&owner_id, self.clone()),
                             Polygon::new(&[]),
+                            ShapeStyle::default()
+                        )
+                },
+            ElementType::FreeHand =>
+                match build {
+                    Build::FromJson(entity_json) => Self::model_from_json::<FreeHandModel>(entity_json),
+                    Build::Default { owner_id } =>
+                        FreeHandModel::entity(
+                            Id::generate(&owner_id, self.clone()),
+                            Path::new(vec![]),
                             ShapeStyle::default()
                         )
                 },

@@ -85,6 +85,23 @@ impl Whiteboard {
         self.active_tool = Some(Box::new(polygon_tool));
     }
 
+    pub fn activate_free_hand_tool(&mut self) {
+        let owner_id: String = self.owner_id.clone();
+
+        let free_hand_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::FreeHand, owner_id.clone()));
+
+        let mut view_port: ViewPort = self.view_port.clone();
+        let receiver = free_hand_tool.event.end_drawing();
+
+        spawn_local(async move {
+            while let Ok(entity) = receiver.recv().await {
+                view_port.add_entity(entity).expect("Can't lock view port to add free hand entity");
+            }
+        });
+
+        self.active_tool = Some(Box::new(free_hand_tool));
+    }
+
     pub fn activate_select_tool(&mut self) {
         self.active_tool = Some(Box::new(SelectTool::<Id>::new()));
     }
