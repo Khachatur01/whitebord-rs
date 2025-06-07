@@ -3,8 +3,13 @@ use geometry::figure::ellipse::Ellipse;
 use geometry::figure::polygon::Polygon;
 use geometry::figure::rectangle::Rectangle;
 use geometry::figure::segment::Segment;
+use geometry::figure::triangle::Triangle;
+use geometry::point::point_2d::Point2D;
+use geometry::point::point_3d::Point3D;
 use js_sys;
-use standard_rendering_plugin::renderer::Renderer;
+use standard_rendering_plugin::renderer::renderer::camera::Camera;
+use standard_rendering_plugin::renderer::renderer::light::Light;
+use standard_rendering_plugin::renderer::renderer::Renderer;
 use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsValue};
@@ -51,7 +56,7 @@ impl Renderer for CanvasRenderer {
         self.context.reset();
     }
 
-    fn segment(&mut self, segment: &Segment, style: &ShapeStyle) {
+    fn segment_2d(&mut self, segment: &Segment<Point2D>, style: &ShapeStyle) {
         self.apply_style(style);
 
         self.context.begin_path();
@@ -63,7 +68,7 @@ impl Renderer for CanvasRenderer {
         self.context.stroke();
     }
 
-    fn polygon(&mut self, polygon: &Polygon, style: &ShapeStyle) {
+    fn polygon_2d(&mut self, polygon: &Polygon<Point2D>, style: &ShapeStyle) {
         self.apply_style(style);
 
         self.context.begin_path();
@@ -79,6 +84,10 @@ impl Renderer for CanvasRenderer {
         self.context.close_path();
 
         self.context.stroke();
+    }
+
+    fn triangle_2d(&mut self, polygon: &Triangle<Point2D>, style: &ShapeStyle) {
+        todo!()
     }
 
     fn rectangle(&mut self, rectangle: &Rectangle, style: &ShapeStyle) {
@@ -111,6 +120,18 @@ impl Renderer for CanvasRenderer {
     fn ellipse(&mut self, ellipse: &Ellipse, style: &ShapeStyle) {
         self.apply_style(style);
 
+        todo!()
+    }
+
+    fn segment_3d(&mut self, segment: &Segment<Point3D>, style: &ShapeStyle) {
+        todo!()
+    }
+
+    fn polygon_3d(&mut self, polygon: &Polygon<Point3D>, style: &ShapeStyle) {
+        todo!()
+    }
+
+    fn triangles_3d(&mut self, triangles: &[(&Triangle<Point3D>, &ShapeStyle)], camera: &Camera, light: &Light) {
         todo!()
     }
 }

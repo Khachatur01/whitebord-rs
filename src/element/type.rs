@@ -4,9 +4,9 @@ use crate::element::Build;
 use entity_model_feature::entity::Entity;
 use entity_model_feature::feature_set::FeatureSet;
 use entity_model_feature::Model;
-use geometry::figure::point::Point;
 use geometry::figure::polygon::Polygon;
 use geometry::figure::rectangle::Rectangle;
+use geometry::point::point_2d::Point2D;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use standard_entity_plugin::model::container_model::ContainerModel;
@@ -35,7 +35,7 @@ impl ElementType {
                     Build::Default { owner_id } =>
                         RectangleModel::entity(
                             Id::generate(&owner_id, self.clone()),
-                            Rectangle::zero_sized(Point::default()),
+                            Rectangle::zero_sized(Point2D::default()),
                             ShapeStyle::default()
                         ),
                 },

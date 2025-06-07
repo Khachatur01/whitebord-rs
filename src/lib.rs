@@ -1,17 +1,18 @@
-mod atomic_view_port;
+mod view_port;
 mod renderer;
 mod element;
 mod from_js_key;
 
-use crate::atomic_view_port::ViewPort;
 use crate::element::id::Id;
 use crate::element::Build;
 use crate::from_js_key::from_js_key;
+use crate::renderer::renderer::canvas_renderer::CanvasRenderer;
+use crate::renderer::renderer::svg_renderer::SVGRenderer;
+use crate::view_port::ViewPort;
 use element::r#type::ElementType;
-use geometry::figure::point::Point;
-use renderer::canvas_renderer::CanvasRenderer;
-use renderer::svg_renderer::SVGRenderer;
-use standard_rendering_plugin::renderer::{Renderable, Renderer};
+use geometry::point::point_2d::Point2D;
+use standard_rendering_plugin::renderable::Renderable;
+use standard_rendering_plugin::renderer::renderer::Renderer;
 use standard_tool_plugin::tool::draw_tool::click_draw_tool::ClickDrawTool;
 use standard_tool_plugin::tool::draw_tool::move_draw_tool::MoveDrawTool;
 use standard_tool_plugin::tool::select_tool::SelectTool;
@@ -124,7 +125,7 @@ impl Whiteboard {
 
         active_tool.interact(
             Interaction::PointerUp(
-                Point::new_2d(x, y),
+                Point2D::new(x, y),
                 PointingDevice::Mouse,
             )
         );

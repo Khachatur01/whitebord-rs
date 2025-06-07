@@ -3,7 +3,12 @@ use geometry::figure::ellipse::Ellipse;
 use geometry::figure::polygon::Polygon;
 use geometry::figure::rectangle::Rectangle;
 use geometry::figure::segment::Segment;
-use standard_rendering_plugin::renderer::Renderer;
+use geometry::figure::triangle::Triangle;
+use geometry::point::point_2d::Point2D;
+use geometry::point::point_3d::Point3D;
+use standard_rendering_plugin::renderer::renderer::camera::Camera;
+use standard_rendering_plugin::renderer::renderer::light::Light;
+use standard_rendering_plugin::renderer::renderer::Renderer;
 use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
@@ -39,7 +44,7 @@ impl Renderer for SVGRenderer {
         self.svg.set_inner_html("");
     }
 
-    fn segment(&mut self, segment: &Segment, style: &ShapeStyle) {
+    fn segment_2d(&mut self, segment: &Segment<Point2D>, style: &ShapeStyle) {
         let window = web_sys::window().expect("global window does not exists");
         let document = window.document().expect("global document does not exists");
 
@@ -75,7 +80,7 @@ impl Renderer for SVGRenderer {
             .expect("");
     }
 
-    fn polygon(&mut self, polygon: &Polygon, shape_style: &ShapeStyle) {
+    fn polygon_2d(&mut self, polygon: &Polygon<Point2D>, shape_style: &ShapeStyle) {
         let window = web_sys::window().expect("global window does not exists");
         let document = window.document().expect("global document does not exists");
 
@@ -104,6 +109,10 @@ impl Renderer for SVGRenderer {
         self.svg
             .append_child(&svg_polygon.dyn_into::<Node>().expect(""))
             .expect("");
+    }
+
+    fn triangle_2d(&mut self, polygon: &Triangle<Point2D>, style: &ShapeStyle) {
+        todo!()
     }
 
     fn rectangle(&mut self, rectangle: &Rectangle, style: &ShapeStyle) {
@@ -148,6 +157,18 @@ impl Renderer for SVGRenderer {
     }
 
     fn ellipse(&mut self, ellipse: &Ellipse, style: &ShapeStyle) {
+        todo!()
+    }
+
+    fn segment_3d(&mut self, segment: &Segment<Point3D>, style: &ShapeStyle) {
+        todo!()
+    }
+
+    fn polygon_3d(&mut self, polygon: &Polygon<Point3D>, style: &ShapeStyle) {
+        todo!()
+    }
+
+    fn triangles_3d(&mut self, triangles: &[(&Triangle<Point3D>, &ShapeStyle)], camera: &Camera, light: &Light) {
         todo!()
     }
 }

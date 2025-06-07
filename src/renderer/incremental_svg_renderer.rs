@@ -1,16 +1,16 @@
 mod update_svg;
 mod create_svg;
 
-use wasm_bindgen::JsCast;
 use crate::element::id::Id;
 use crate::renderer::incremental_svg_renderer::create_svg::CreateSVG;
+use crate::renderer::incremental_svg_renderer::update_svg::UpdateSVG;
 use entity_model_feature::entity::Entity;
-use standard_rendering_plugin::renderer::IncrementalRenderer;
+use standard_rendering_plugin::renderer::renderer_incremental::RendererIncremental;
 use standard_svg_plugin::svg_element::{SVGElement, SVG};
 use standard_svg_plugin::ToSVG;
 use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::JsCast;
 use web_sys::{Element, SvgCircleElement, SvgElement, SvgLineElement, SvgRectElement};
-use crate::renderer::incremental_svg_renderer::update_svg::UpdateSVG;
 
 #[wasm_bindgen]
 pub struct IncrementalSvgRenderer {
@@ -31,11 +31,7 @@ impl IncrementalSvgRenderer {
     }
 }
 
-impl IncrementalRenderer<Id> for IncrementalSvgRenderer {
-    fn remove(&mut self, id: &str) {
-        self.document.get_element_by_id(id).expect(&format!("Can't find element by id {id} to remove")).remove();
-    }
-
+impl RendererIncremental<Id> for IncrementalSvgRenderer {
     fn add(&mut self, entity: &Entity<Id>) {
         let Some(to_svg) = entity.query::<ToSVG<Id>>() else {
             return;
@@ -108,5 +104,11 @@ impl IncrementalRenderer<Id> for IncrementalSvgRenderer {
             SVG::ForeignObject =>
                 todo!(),
         };
+    }
+
+    fn remove(&mut self, id: &Id) {
+        let html_id: &str = &id.as_html_id();
+
+        self.document.get_element_by_id(html_id).expect(&format!("Can't find element by id {html_id} to remove")).remove();
     }
 }
