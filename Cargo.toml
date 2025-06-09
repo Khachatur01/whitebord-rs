@@ -24,6 +24,7 @@ codegen-units = 1
 [dependencies]
 entity-model-feature = { path = "../graphics-rs/lib/entity-model-feature" }
 geometry = { path = "../graphics-rs/lib/geometry" }
+event-handler = { path = "../graphics-rs/lib/event-handler" }
 
 standard-svg-plugin = { path = "../graphics-rs/plugin/standard-svg-plugin" }
 standard-entity-plugin = { path = "../graphics-rs/plugin/standard-entity-plugin" }

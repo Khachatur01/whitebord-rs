@@ -20,11 +20,22 @@ use standard_tool_plugin::tool::Interaction;
 use standard_tool_plugin::tool::{PointingDevice, Tool};
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen_futures::spawn_local;
+use entity_model_feature::entity::Entity;
+use event_handler::Receiver;
 
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
+}
+
+#[inline]
+fn listen_async<E: 'static>(receiver: Receiver<E>, mut callback: impl FnMut(E) + 'static) {
+    spawn_local(async move {
+        while let Ok(event) = receiver.recv().await {
+            callback(event);
+        }
+    });
 }
 
 #[wasm_bindgen]
@@ -57,12 +68,10 @@ impl Whiteboard {
         let rectangle_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::Rectangle, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-        let receiver = rectangle_tool.event.end_drawing();
 
-        spawn_local(async move {
-            while let Ok(entity) = receiver.recv().await {
-                view_port.add_entity(entity).expect("Can't lock view port to add rectangle entity");
-            }
+        let receiver = rectangle_tool.event.end_drawing();
+        listen_async(receiver, move |entity: Entity<Id>| {
+            view_port.add_entity(entity).expect("Can't lock view port to add rectangle entity");
         });
 
         self.active_tool = Some(Box::new(rectangle_tool));
@@ -74,12 +83,10 @@ impl Whiteboard {
         let polygon_tool: ClickDrawTool<Id> = ClickDrawTool::new(move || Build::default_entity(ElementType::Polygon, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-        let receiver = polygon_tool.event.end_drawing();
 
-        spawn_local(async move {
-            while let Ok(entity) = receiver.recv().await {
-                view_port.add_entity(entity).expect("Can't lock view port to add polygon entity");
-            }
+        let receiver = polygon_tool.event.end_drawing();
+        listen_async(receiver, move |entity: Entity<Id>| {
+            view_port.add_entity(entity).expect("Can't lock view port to add polygon entity");
         });
 
         self.active_tool = Some(Box::new(polygon_tool));
@@ -91,8 +98,8 @@ impl Whiteboard {
         let free_hand_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::FreeHand, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-        let receiver = free_hand_tool.event.end_drawing();
 
+        let receiver = free_hand_tool.event.end_drawing();
         spawn_local(async move {
             while let Ok(entity) = receiver.recv().await {
                 view_port.add_entity(entity).expect("Can't lock view port to add free hand entity");
