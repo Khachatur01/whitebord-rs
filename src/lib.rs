@@ -4,12 +4,13 @@ mod element;
 mod from_js_key;
 
 use crate::element::id::Id;
-use crate::element::Build;
+use crate::element::{Build, ElementType};
 use crate::from_js_key::from_js_key;
 use crate::renderer::renderer::canvas_renderer::CanvasRenderer;
 use crate::renderer::renderer::svg_renderer::SVGRenderer;
 use crate::view_port::ViewPort;
-use element::r#type::ElementType;
+use entity_model_feature::entity::Entity;
+use event_handler::Receiver;
 use geometry::point::point_2d::Point2D;
 use standard_rendering_plugin::renderable::Renderable;
 use standard_rendering_plugin::renderer::renderer::Renderer;
@@ -20,8 +21,6 @@ use standard_tool_plugin::tool::Interaction;
 use standard_tool_plugin::tool::{PointingDevice, Tool};
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen_futures::spawn_local;
-use entity_model_feature::entity::Entity;
-use event_handler::Receiver;
 
 #[wasm_bindgen]
 extern "C" {
@@ -65,7 +64,7 @@ impl Whiteboard {
     pub fn activate_rectangle_tool(&mut self) {
         let owner_id: String = self.owner_id.clone();
 
-        let rectangle_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::Rectangle, owner_id.clone()));
+        let rectangle_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default(&owner_id, ElementType::Rectangle));
 
         let mut view_port: ViewPort = self.view_port.clone();
         listen_async(rectangle_tool.event.end_drawing(), move |entity: Entity<Id>| {
@@ -78,7 +77,7 @@ impl Whiteboard {
     pub fn activate_polygon_tool(&mut self) {
         let owner_id: String = self.owner_id.clone();
 
-        let polygon_tool: ClickDrawTool<Id> = ClickDrawTool::new(move || Build::default_entity(ElementType::Polygon, owner_id.clone()));
+        let polygon_tool: ClickDrawTool<Id> = ClickDrawTool::new(move || Build::default(&owner_id, ElementType::Polygon));
 
         let mut view_port: ViewPort = self.view_port.clone();
         listen_async(polygon_tool.event.end_drawing(), move |entity: Entity<Id>| {
@@ -91,7 +90,7 @@ impl Whiteboard {
     pub fn activate_free_hand_tool(&mut self) {
         let owner_id: String = self.owner_id.clone();
 
-        let free_hand_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::FreeHand, owner_id.clone()));
+        let free_hand_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default(&owner_id, ElementType::FreeHand));
 
         let mut view_port: ViewPort = self.view_port.clone();
         listen_async(free_hand_tool.event.end_drawing(), move |entity: Entity<Id>| {

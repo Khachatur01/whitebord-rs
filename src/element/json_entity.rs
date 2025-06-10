@@ -9,18 +9,20 @@ pub struct JsonEntity {
     pub model: serde_json::Value,
 }
 
-impl JsonEntity {
-    pub fn entity_from_str(str: &str) -> Entity<Id> {
-        serde_json::from_str::<JsonEntity>(str).unwrap().into()
+/* Try to parse json string. */
+impl TryFrom<&str> for JsonEntity {
+    type Error = serde_json::Error;
+
+    fn try_from(entity: &str) -> Result<Self, Self::Error> {
+        serde_json::from_str(entity)
     }
 }
 
-impl Into<Entity<Id>> for JsonEntity {
-    fn into(self) -> Entity<Id> {
-        self
-            .id
-            .clone()
-            .element_type()
-            .build(Build::FromJson(self))
+/* Try to parse json string. */
+impl TryInto<Entity<Id>> for JsonEntity {
+    type Error = serde_json::Error;
+
+    fn try_into(self) -> Result<Entity<Id>, Self::Error> {
+        Build::FromJson(self).build()
     }
 }

@@ -1,5 +1,6 @@
 use geometry::figure::circle::Circle;
 use geometry::figure::ellipse::Ellipse;
+use geometry::figure::path::Path;
 use geometry::figure::polygon::Polygon;
 use geometry::figure::rectangle::Rectangle;
 use geometry::figure::segment::Segment;
@@ -13,7 +14,6 @@ use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use web_sys::{Node, SvgElement, SvgLineElement, SvgPathElement, SvgPolygonElement, SvgRectElement};
-use geometry::figure::path::Path;
 
 #[wasm_bindgen]
 extern "C" {

@@ -1,4 +1,4 @@
-use crate::element::r#type::ElementType;
+use crate::element::ElementType;
 use entity_model_feature::entity_id::EntityId;
 use entity_model_feature::AsSerialize;
 use serde::{Deserialize, Serialize};
@@ -14,9 +14,9 @@ pub struct Id {
 }
 
 impl Id {
-    pub fn generate(id: &str, element_type: ElementType) -> Self {
+    pub fn generate(owner_id: &str, element_type: ElementType) -> Self {
         Self {
-            owner_id: id.to_string(),
+            owner_id: owner_id.to_string(),
             index: js_sys::Date::new_0().get_milliseconds() as usize,
             element_type
         }
