@@ -68,9 +68,7 @@ impl Whiteboard {
         let rectangle_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::Rectangle, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-
-        let receiver = rectangle_tool.event.end_drawing();
-        listen_async(receiver, move |entity: Entity<Id>| {
+        listen_async(rectangle_tool.event.end_drawing(), move |entity: Entity<Id>| {
             view_port.add_entity(entity).expect("Can't lock view port to add rectangle entity");
         });
 
@@ -83,9 +81,7 @@ impl Whiteboard {
         let polygon_tool: ClickDrawTool<Id> = ClickDrawTool::new(move || Build::default_entity(ElementType::Polygon, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-
-        let receiver = polygon_tool.event.end_drawing();
-        listen_async(receiver, move |entity: Entity<Id>| {
+        listen_async(polygon_tool.event.end_drawing(), move |entity: Entity<Id>| {
             view_port.add_entity(entity).expect("Can't lock view port to add polygon entity");
         });
 
@@ -98,12 +94,8 @@ impl Whiteboard {
         let free_hand_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default_entity(ElementType::FreeHand, owner_id.clone()));
 
         let mut view_port: ViewPort = self.view_port.clone();
-
-        let receiver = free_hand_tool.event.end_drawing();
-        spawn_local(async move {
-            while let Ok(entity) = receiver.recv().await {
-                view_port.add_entity(entity).expect("Can't lock view port to add free hand entity");
-            }
+        listen_async(free_hand_tool.event.end_drawing(), move |entity: Entity<Id>| {
+            view_port.add_entity(entity).expect("Can't lock view port to add free hand entity");
         });
 
         self.active_tool = Some(Box::new(free_hand_tool));

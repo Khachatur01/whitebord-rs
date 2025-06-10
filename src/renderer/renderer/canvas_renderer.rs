@@ -40,11 +40,11 @@ impl CanvasRenderer {
     fn apply_style(&mut self, style: &ShapeStyle) {
         self.context.set_fill_style_str(&style.fill_color.to_hex());
         self.context
-            .set_stroke_style_str(&style.stroke_color.to_hex());
-        self.context.set_line_width(style.stroke_width);
+            .set_stroke_style_str(&style.stroke.color.to_hex());
+        self.context.set_line_width(style.stroke.width);
 
         let array: js_sys::Array = style
-            .stroke_dash_array
+            .stroke.dash_array
             .iter()
             .map(|x| JsValue::from_f64(*x as f64))
             .collect::<js_sys::Array>();
