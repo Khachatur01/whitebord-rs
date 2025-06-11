@@ -1,3 +1,4 @@
+use algebra::linear::matrix::Matrix;
 use geometry::figure::circle::Circle;
 use geometry::figure::ellipse::Ellipse;
 use geometry::figure::path::command::Command;
@@ -16,7 +17,6 @@ use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
-use algebra::linear::matrix::Matrix;
 
 #[wasm_bindgen]
 pub struct CanvasRenderer {
@@ -121,16 +121,16 @@ impl Renderer for CanvasRenderer {
         self.context.begin_path();
 
         self.context.fill_rect(
-            rectangle.top_left().x(),
-            rectangle.top_left().y(),
-            rectangle.width(),
-            rectangle.height(),
+            rectangle.top_left.x,
+            rectangle.top_left.y,
+            rectangle.width,
+            rectangle.height,
         );
         self.context.rect(
-            rectangle.top_left().x(),
-            rectangle.top_left().y(),
-            rectangle.width(),
-            rectangle.height(),
+            rectangle.top_left.x,
+            rectangle.top_left.y,
+            rectangle.width,
+            rectangle.height,
         );
 
         self.context.stroke();

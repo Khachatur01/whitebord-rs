@@ -1,3 +1,5 @@
+#![feature(extern_types)]
+
 mod view_port;
 mod renderer;
 mod element;
@@ -20,10 +22,15 @@ use standard_tool_plugin::tool::select_tool::SelectTool;
 use standard_tool_plugin::tool::Interaction;
 use standard_tool_plugin::tool::{PointingDevice, Tool};
 use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
 
+unsafe extern "C" {
+    pub type CanvasRenderer1;
+}
+
 #[wasm_bindgen]
-extern "C" {
+unsafe extern "C" {
     #[wasm_bindgen(js_namespace = console)]
     fn log(s: &str);
 }

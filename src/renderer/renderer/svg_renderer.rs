@@ -1,3 +1,4 @@
+use algebra::linear::matrix::Matrix;
 use geometry::figure::circle::Circle;
 use geometry::figure::ellipse::Ellipse;
 use geometry::figure::path::Path;
@@ -14,7 +15,6 @@ use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use web_sys::{Node, SvgElement, SvgLineElement, SvgPathElement, SvgPolygonElement, SvgRectElement};
-use algebra::linear::matrix::Matrix;
 
 #[wasm_bindgen]
 extern "C" {
@@ -143,17 +143,17 @@ impl Renderer for SVGRenderer {
 
         let absolute_sized_rectangle: Rectangle = rectangle.absolute_sized();
         svg_rectangle
-            .set_attribute("x", &format!("{}", absolute_sized_rectangle.top_left().x()))
+            .set_attribute("x", &format!("{}", absolute_sized_rectangle.top_left.x))
             .expect("TODO: panic message");
         svg_rectangle
-            .set_attribute("y", &format!("{}", absolute_sized_rectangle.top_left().y()))
+            .set_attribute("y", &format!("{}", absolute_sized_rectangle.top_left.y))
             .expect("TODO: panic message");
 
         svg_rectangle
-            .set_attribute("width", &format!("{}", absolute_sized_rectangle.width()))
+            .set_attribute("width", &format!("{}", absolute_sized_rectangle.width))
             .expect("TODO: panic message");
         svg_rectangle
-            .set_attribute("height", &format!("{}", absolute_sized_rectangle.height()))
+            .set_attribute("height", &format!("{}", absolute_sized_rectangle.height))
             .expect("TODO: panic message");
 
         svg_rectangle
