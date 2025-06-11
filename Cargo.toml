@@ -23,6 +23,7 @@ codegen-units = 1
 
 [dependencies]
 entity-model-feature = { path = "../graphics-rs/lib/entity-model-feature" }
+algebra = { path = "../graphics-rs/lib/algebra" }
 geometry = { path = "../graphics-rs/lib/geometry" }
 event-handler = { path = "../graphics-rs/lib/event-handler" }
 

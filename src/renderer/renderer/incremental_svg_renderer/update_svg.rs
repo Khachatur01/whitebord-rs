@@ -42,6 +42,7 @@ impl UpdateSVG<SVGCircle> for SvgCircleElement {
         self.set_attribute("cy", &svg_element.cy.to_string()).expect("Can't set cy");
         self.set_attribute("r", &svg_element.r.to_string()).expect("Can't set r");
 
+        self.set_attribute("transform", "matrix3d(todo)").expect("Can't set attribute transformation matrix");
         self.set_attributes(attributes);
         self.set_css(css);
     }

@@ -14,6 +14,7 @@ use standard_rendering_plugin::style::shape_style::ShapeStyle;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsCast;
 use web_sys::{Node, SvgElement, SvgLineElement, SvgPathElement, SvgPolygonElement, SvgRectElement};
+use algebra::linear::matrix::Matrix;
 
 #[wasm_bindgen]
 extern "C" {
@@ -45,7 +46,7 @@ impl Renderer for SVGRenderer {
         self.svg.set_inner_html("");
     }
 
-    fn path(&mut self, path: &Path, style: &ShapeStyle) {
+    fn path(&mut self, path: &Path, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         let svg_path = self.document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "path")
             .expect("can't create svg path element")
@@ -68,7 +69,7 @@ impl Renderer for SVGRenderer {
             .expect("");
     }
 
-    fn segment_2d(&mut self, segment: &Segment<Point2D>, style: &ShapeStyle) {
+    fn segment_2d(&mut self, segment: &Segment<Point2D>, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         let svg_line = self.document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "line")
             .expect("can't create svg line element")
@@ -101,7 +102,7 @@ impl Renderer for SVGRenderer {
             .expect("");
     }
 
-    fn polygon_2d(&mut self, polygon: &Polygon<Point2D>, shape_style: &ShapeStyle) {
+    fn polygon_2d(&mut self, polygon: &Polygon<Point2D>, shape_style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         let svg_polygon = self.document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "polygon")
             .expect("can't create svg polygon element")
@@ -129,11 +130,11 @@ impl Renderer for SVGRenderer {
             .expect("");
     }
 
-    fn triangle_2d(&mut self, polygon: &Triangle<Point2D>, style: &ShapeStyle) {
+    fn triangle_2d(&mut self, polygon: &Triangle<Point2D>, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         todo!()
     }
 
-    fn rectangle(&mut self, rectangle: &Rectangle, style: &ShapeStyle) {
+    fn rectangle(&mut self, rectangle: &Rectangle, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         let svg_rectangle = self.document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "rect")
             .expect("can't create svg rectangle element")
@@ -167,23 +168,23 @@ impl Renderer for SVGRenderer {
             .expect("");
     }
 
-    fn circle(&mut self, circle: &Circle, style: &ShapeStyle) {
+    fn circle(&mut self, circle: &Circle, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         todo!()
     }
 
-    fn ellipse(&mut self, ellipse: &Ellipse, style: &ShapeStyle) {
+    fn ellipse(&mut self, ellipse: &Ellipse, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         todo!()
     }
 
-    fn segment_3d(&mut self, segment: &Segment<Point3D>, style: &ShapeStyle) {
+    fn segment_3d(&mut self, segment: &Segment<Point3D>, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         todo!()
     }
 
-    fn polygon_3d(&mut self, polygon: &Polygon<Point3D>, style: &ShapeStyle) {
+    fn polygon_3d(&mut self, polygon: &Polygon<Point3D>, style: &ShapeStyle, transform_matrix: Option<Matrix<3>>) {
         todo!()
     }
 
-    fn triangles_3d(&mut self, triangles: &[(&Triangle<Point3D>, &ShapeStyle)], camera: &Camera, light: &Light) {
+    fn triangles_3d(&mut self, triangles: &[(&Triangle<Point3D>, &ShapeStyle)], camera: &Camera, light: &Light, transform_matrix: Option<Matrix<3>>) {
         todo!()
     }
 }

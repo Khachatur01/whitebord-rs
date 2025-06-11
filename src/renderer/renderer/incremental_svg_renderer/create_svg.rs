@@ -1,4 +1,4 @@
-use crate::renderer::incremental_svg_renderer::update_svg::UpdateSVG;
+use crate::renderer::renderer::incremental_svg_renderer::update_svg::UpdateSVG;
 use standard_svg_plugin::property_map::PropertyMap;
 use wasm_bindgen::JsCast;
 use web_sys::Document;

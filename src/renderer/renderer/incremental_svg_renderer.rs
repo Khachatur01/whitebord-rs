@@ -2,8 +2,8 @@ mod update_svg;
 mod create_svg;
 
 use crate::element::id::Id;
-use crate::renderer::incremental_svg_renderer::create_svg::CreateSVG;
-use crate::renderer::incremental_svg_renderer::update_svg::UpdateSVG;
+use crate::renderer::renderer::incremental_svg_renderer::create_svg::CreateSVG;
+use crate::renderer::renderer::incremental_svg_renderer::update_svg::UpdateSVG;
 use entity_model_feature::entity::Entity;
 use standard_rendering_plugin::renderer::renderer_incremental::RendererIncremental;
 use standard_svg_plugin::svg_element::{SVGElement, SVG};
