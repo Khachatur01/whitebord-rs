@@ -22,12 +22,7 @@ use standard_tool_plugin::tool::select_tool::SelectTool;
 use standard_tool_plugin::tool::Interaction;
 use standard_tool_plugin::tool::{PointingDevice, Tool};
 use wasm_bindgen::prelude::wasm_bindgen;
-use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::spawn_local;
-
-unsafe extern "C" {
-    pub type CanvasRenderer1;
-}
 
 #[wasm_bindgen]
 unsafe extern "C" {
