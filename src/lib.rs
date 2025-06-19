@@ -63,43 +63,30 @@ impl Whiteboard {
 
 #[wasm_bindgen]
 impl Whiteboard {
-    pub fn activate_rectangle_tool(&mut self) {
+    pub fn activate_move_draw(&mut self, element_type: ElementType) {
         let owner_id: String = self.owner_id.clone();
 
-        let rectangle_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default(&owner_id, ElementType::Rectangle));
+        let move_draw_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default(&owner_id, element_type));
 
         let mut view_port: ViewPort = self.view_port.clone();
-        listen_async(rectangle_tool.event.finish_drawing(), move |entity: Entity<Id>| {
-            view_port.add_entity(entity).expect("Can't lock view port to add rectangle entity");
+        listen_async(move_draw_tool.event.finish_drawing(), move |entity: Entity<Id>| {
+            view_port.add_entity(entity).expect("Can't lock view port to add entity");
         });
 
-        self.active_tool = Some(Box::new(rectangle_tool));
+        self.active_tool = Some(Box::new(move_draw_tool));
     }
 
-    pub fn activate_polygon_tool(&mut self) {
+    pub fn activate_click_draw(&mut self, element_type: ElementType) {
         let owner_id: String = self.owner_id.clone();
 
-        let polygon_tool: ClickDrawTool<Id> = ClickDrawTool::new(move || Build::default(&owner_id, ElementType::Polygon));
+        let click_draw_tool: ClickDrawTool<Id> = ClickDrawTool::new(move || Build::default(&owner_id, element_type));
 
         let mut view_port: ViewPort = self.view_port.clone();
-        listen_async(polygon_tool.event.finish_drawing(), move |entity: Entity<Id>| {
-            view_port.add_entity(entity).expect("Can't lock view port to add polygon entity");
+        listen_async(click_draw_tool.event.finish_drawing(), move |entity: Entity<Id>| {
+            view_port.add_entity(entity).expect("Can't lock view port to add entity");
         });
 
-        self.active_tool = Some(Box::new(polygon_tool));
-    }
-
-    pub fn activate_free_hand_tool(&mut self) {
-        let owner_id: String = self.owner_id.clone();
-
-        let free_hand_tool: MoveDrawTool<Id> = MoveDrawTool::new(move || Build::default(&owner_id, ElementType::FreeHand));
-
-        let mut view_port: ViewPort = self.view_port.clone();
-        listen_async(free_hand_tool.event.finish_drawing(), move |entity: Entity<Id>| {
-            view_port.add_entity(entity).expect("Can't lock view port to add free hand entity");
-        });
-
-        self.active_tool = Some(Box::new(free_hand_tool));
+        self.active_tool = Some(Box::new(click_draw_tool));
     }
 
     pub fn activate_select_tool(&mut self) {

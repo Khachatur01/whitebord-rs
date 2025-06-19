@@ -19,7 +19,7 @@ pub mod json_entity;
 
 pub type Result<Ok> = result::Result<Ok, serde_json::Error>;
 
-#[derive(Clone, Serialize, Deserialize, Eq, PartialEq)]
+#[derive(Copy, Clone, Serialize, Deserialize, Eq, PartialEq)]
 #[wasm_bindgen]
 pub enum ElementType {
     Rectangle,
